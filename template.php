@@ -30,6 +30,17 @@ function {{machine_name}}_css_alter(&$css) {
  * Implements template_preprocess_page().
  */
 function {{machine_name}}_preprocess_page(&$variables) {
+  // Format and add main menu to theme.
+  $variables['main_menu'] = menu_tree(variable_get('menu_main_links_source', 'main-menu'));
+  $variables['main_menu']['#theme_wrappers'] = array();
+
+  $build = node_page_default();
+  if (!empty($build['default_message']) && drupal_is_front_page()) {
+    $default_message = '<p class="lead">Cover is a one-page template for building simple and beautiful home pages. Download, edit the text, and add your own fullscreen background photo to make it your own.</p>';
+    $default_message .= '<p class="lead"><a href="#" class="btn btn-lg btn-default">Learn more</a></p>';
+    $variables['page']['content']['#markup'] = $default_message;
+  }
+
   // Add copyright to theme.
   if ($copyright = theme_get_setting('copyright')) {
     $variables['copyright'] = check_markup($copyright['value'], $copyright['format']);
